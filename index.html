@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ポイントカードアプリ</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <main class="card">
+    <h1>Point Card</h1>
+    <div class="points" id="point-display">現在のポイント： 0pt</div>
+
+    <div class="form-group">
+      <label for="use-points-input">使用ポイント数</label>
+      <div class="point-control">
+        <button class="adjust-btn" data-delta="-10">-</button>
+        <input type="text" id="user-points-input" value="0" readonly>
+        <button class="adjust-btn" data-delta="10">+</button>
+      </div>
+    </div>
+
+    <button class="btn" id="use-point-btn">ポイント使う</button>
+    <button class="btn scan-btn" id="start-scan-btn">QRコードを読み取ってポイント加算</button>
+
+    <div class="qr-reader" id="qr-reader"></div>
+  </main>
+</body>
+<!-- QRライブラリ -->
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script src="js/main.js"></script>
+</html>
