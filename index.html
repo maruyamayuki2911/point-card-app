@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <main class="card">
+  <main class="card" id="card">
     <h1>Point Card</h1>
     <div class="points" id="point-display">現在のポイント： 0pt</div>
 
@@ -26,11 +26,11 @@
 
     <button class="btn" id="use-point-btn">ポイント使う</button>
     <button class="btn scan-btn" id="start-scan-btn">QRコードを読み取ってポイント加算</button>
-
-    <div class="qr-reader" id="qr-reader"></div>
   </main>
+  <div class="qr-reader" id="qr-reader"></div>
 </body>
 <!-- QRライブラリ -->
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 <script src="js/main.js"></script>
+
 </html>

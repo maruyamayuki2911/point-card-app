@@ -9,6 +9,8 @@ const html5QrCode = new Html5Qrcode('qr-reader');
 // QRコードコンテナ要素
 const qrContainer = document.getElementById('qr-reader');
 
+// カード要素
+const cardContainer = document.getElementById('card');
 
 // ----------クラス／関数----------
 
@@ -40,10 +42,10 @@ function updateDisplay() {
 
 // 《◆今日のポイントを追加する処理》
 function addPointsToday() {
-  // 最後にスキャンした日付
+  // 最後にスキャンした日付を取得
   const lastScanDate = localStorage.getItem('lastQrScanDate');
 
-  // 今日の日付
+  // 今日の日付を取得
   const scanDate = new Date().toISOString().slice(0, 10);
 
   // 1日1回の判定
@@ -69,7 +71,12 @@ function addPointsToday() {
 const onScanSuccess = async (decodeText) => {
   // カメラを停止
   html5QrCode.stop();
+
+  // QRコードコンテナを表示
   qrContainer.style.display = 'none';
+
+  // カードコンテナを非表示
+  cardContainer.style.display = 'block';
 
   // ポイントを加算
   addPointsToday();
@@ -79,6 +86,9 @@ const onScanSuccess = async (decodeText) => {
 const startQrScan = async () => {
   // QRコードコンテナを表示
   qrContainer.style.display = 'block';
+
+  // カードコンテナを非表示
+  cardContainer.style.display = 'none';
 
   // QRスキャンを開始
   await html5QrCode.start(
@@ -90,7 +100,7 @@ const startQrScan = async () => {
 
 
 // ----------運転----------
-  
+
 addEventListener('DOMContentLoaded', () => {
 
   // インスタンス生成
