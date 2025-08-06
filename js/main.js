@@ -112,5 +112,4 @@ addEventListener('DOMContentLoaded', () => {
 
   // カメラ起動イベント
   document.getElementById('start-scan-btn').addEventListener('click', () => { startQrScan(); });
-
 });
