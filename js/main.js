@@ -39,8 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // QRコンテナを表示
       showQrContainer(qrContainer, QrScannerStopBtn, cardContainer);
       const decodeText = await html5QrCode.startQrScan();
-      // カードコンテナ表示
-      showCardContainer(qrContainer, QrScannerStopBtn, cardContainer);
 
       // ハンドラ登録
       decoder.register("add-points", () => addPointToday(currentUser, pointDisplay));
@@ -61,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // カメラ停止イベント
   QrScannerStopBtn.addEventListener('click', () => {
     stopCamera(html5QrCode);
-    showQrContainer(qrContainer, QrScannerStopBtn, cardContainer);
     showCardContainer(qrContainer, QrScannerStopBtn, cardContainer);
   });
 

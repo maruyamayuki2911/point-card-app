@@ -11,31 +11,33 @@ export function displayPointHeld(currentUser,pointDisplay) {
 
 // QRコンテナを表示する処理
 export function showQrContainer(qrContainer, QrScannerStopBtn, cardContainer) {
-  // QRコードコンテナを表示
-  qrContainer.style.display = 'block';
-
   // ✕ボタン表示
-  QrScannerStopBtn.style.visibility = 'visible';
-
+  // QrScannerStopBtn.style.visibility = 'visible';
+  QrScannerStopBtn.style.display = 'block';
+  
   // カードコンテナを非表示
   cardContainer.style.display = 'none';
+  
+  // QRコードコンテナを表示
+  qrContainer.style.display = 'block';
 }
 
 // カードコンテナを表示する処理
 export function showCardContainer(qrContainer, QrScannerStopBtn, cardContainer) {
+  // ✕ボタン非表示
+  // QrScannerStopBtn.style.visibility = 'hidden';
+  QrScannerStopBtn.style.display = 'none';
+  
   // QRコードコンテナを非表示
   qrContainer.style.display = 'none';
-
-  // ✕ボタン非表示
-  QrScannerStopBtn.style.visibility = 'hidden';
 
   // カードコンテナを表示
   cardContainer.style.display = 'block';
 }
 
 // ✕ボタンでカメラを停止する処理
-export function stopCamera(html5QrCode) {
-  html5QrCode.stopQrScan();
+export async function stopCamera(html5QrCode) {
+   html5QrCode.stopQrScan();
 }
 
 // 使用ポイントをリセットする処理
