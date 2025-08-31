@@ -1,12 +1,12 @@
 @charset "UFT-8";
 
 body{
-  position: relative;
   font-family: 'Roboto',sans-serif;
   background-color:#f0f2f5;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   min-height: 100vh;
 }
 
@@ -123,10 +123,7 @@ input[readonly]{
 }
 
 .qr-stop-btn{
-  position: absolute;
-  bottom: 18%;
-  left: 50%;
   width: 50%;
-  transform: translateX(-50%);
+  margin: 10px auto;
   display: none;
 }
