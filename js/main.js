@@ -1,196 +1,86 @@
-// ==== 変数 ====
+// ==== 定義ファイル ====
+import { User } from './user.js';
+import { QrScanner } from './qr.js';
+import { QrDecoder } from './qr-decoder.js';
+import { displayPointHeld, showQrContainer, showCardContainer, stopCamera, resetUsagePoint,updateUsagePoint } from './ui.js';
+import { addPointToday, usePoint } from './point-service.js';
 
+
+// ==== 変数 ====
 // Userインスタンス
 let currentUser;
-
-// QRコードインスタンス生成
+// QRコードインスタンス
 let html5QrCode;
-
+// デコーダーインスタンス
+let decoder;
 // QRコードコンテナ要素
 const qrContainer = document.getElementById('qr-reader');
-
 // カード要素
 const cardContainer = document.getElementById('card');
-
-// ==== クラス／関数 ====
-
-// 《ユーザー情報を管理するクラス》
-class User {
-  constructor(id, name, point) {
-    this.id = id;
-    this.name = name;
-    this.point = new UserPoint(point);
-  }
-}
-
-// 《ポイントを管理するクラス》
-class UserPoint {
-  constructor(point) {
-    this.point = point;
-  }
-
-  // ポイントを加算
-  addPoint(amount) {
-    this.point += amount;
-  }
-
-  // ポイントを減算
-  subtractPoint(amount) {
-    this.point -= amount;
-  }
-
-  // 現在のポイントを返す
-  getPoint() {
-    return this.point;
-  }
-}
-
-// 《QRコードクラス》
-class QrScanner {
-  constructor(element) {
-    this.qr = new Html5Qrcode(element);
-  }
-
-  // カメラ起動
-  startQrScan = async () => {
-    // QRコンテナ表示
-    showQrContainer();
-
-    await this.qr.start(
-      { facingMode: 'environment' },
-      { fps: 10, qrbox: { width: 250, height: 250 } },
-      this.handleScanSuccess
-    );
-  }
-
-  // カメラ停止
-  stopQrScan = () => {
-    this.qr.stop();
-  }
-
-  // スキャン成功時の処理
-  handleScanSuccess = (decodeText) => {
-    // カメラ停止
-    this.stopQrScan();
-
-    // カードコンテナ表示
-    showCardContainer();
-
-    // ポイント追加
-
-    // ポイント追加した日付を記録
-    storageManager.setLastScanDate(getTodayDate());
-  }
-}
-
-
-// 《localstorageを管理するクラス》
-class storageManager {
-  static setLastScanDate(date) {
-    localStorage.setItem('lastQrScanDate', date);
-  }
-
-  static getLastScanDate() {
-    return localStorage.getItem('lastQrScanDate');
-  }
-}
-
-// 今日の日付を取得する処理
-function getTodayDate() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-// 《保有ポイントを表示する処理》  
-function displayPointHeld() {
-  const pointDisplay = document.getElementById('point-display');
-  pointDisplay.textContent = `現在のポイント：${currentUser.point.getPoint()}pt`
-}
-
-// QRコンテナを表示する処理
-function showQrContainer() {
-  // QRコードコンテナを表示
-  qrContainer.style.display = 'block';
-
-  // カードコンテナを非表示
-  cardContainer.style.display = 'none';
-}
-
-// カードコンテナを表示する処理
-function showCardContainer() {
-  // QRコードコンテナを非表示
-  qrContainer.style.display = 'none';
-
-  // カードコンテナを表示
-  cardContainer.style.display = 'block';
-}
-
-// 《今日のポイントを追加する処理》
-function addPointToday() {
-  // 最後にスキャンした日付を取得
-  const lastScanDate = localStorage.getItem('lastQrScanDate');
-
-  // 今日の日付を取得
-  const scanDate = new Date().toISOString().slice(0, 10);
-
-  // 1日1回の判定
-  if (lastScanDate === scanDate) {
-    alert('今日はすでにポイントを獲得しています。');
-    return;
-  }
-
-  // ポイントを追加
-  const point = 10;
-  currentUserPoint.addPoint(point);
-
-  // スキャン日を保存
-  localStorage.setItem('lastQrScanDate', scanDate);
-
-  alert('QRコードを読み取りしました。10pt加算されました。');
-
-  // 現在のポイントを表示
-  displayPointHeld();
-}
-
-// 《ポイントを使用する処理｠
-function usePoint(userPoint, usagePoint) {
-
-  if (userPoint >= usagePoint) {
-    currentUserPoint.subtractPoint(usagePoint);
-
-    displayPointHeld();
-
-    alert('ポイントを使用しました。');
-  } else {
-    alert('ポイントが足りません');
-  }
-}
+// カメラ停止ボタン要素
+const QrScannerStopBtn = document.getElementById('qr-stop-btn');
+// ユーザーポイント要素
+const pointDisplay = document.getElementById('point-display');
 
 
 // ==== 運転 ====
-
 document.addEventListener('DOMContentLoaded', () => {
-
-  // テストインスタンス生成
-  const point = 100;
+  const point = 50;
   currentUser = new User(1, '田中', point);
-  console.log("インスタンス：", currentUser);
-
-  // QRコードインスタンス生成
   html5QrCode = new QrScanner('qr-reader');
-  console.log(html5QrCode);
+  decoder = new QrDecoder();
 
   // 現在のポイントを表示
-  displayPointHeld();
+  displayPointHeld(currentUser, pointDisplay);
 
   // カメラ起動イベント
-  document.getElementById('start-scan-btn').addEventListener('click', html5QrCode.startQrScan);
+  document.getElementById('start-scan-btn').addEventListener('click', async () => {
+    try {
+      // QRコンテナを表示
+      showQrContainer(qrContainer, QrScannerStopBtn, cardContainer);
+      const decodeText = await html5QrCode.startQrScan();
+      // カードコンテナ表示
+      showCardContainer(qrContainer, QrScannerStopBtn, cardContainer);
+
+      // ハンドラ登録
+      decoder.register("add-points", () => addPointToday(currentUser, pointDisplay));
+
+      // デコードテキスト判定
+      const result = decoder.validate(decodeText);
+
+      if (result.valid) {
+        result.action();
+      } else {
+        alert('未対応のQRコードです');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  // カメラ停止イベント
+  QrScannerStopBtn.addEventListener('click', () => {
+    stopCamera(html5QrCode);
+    showQrContainer(qrContainer, QrScannerStopBtn, cardContainer);
+    showCardContainer(qrContainer, QrScannerStopBtn, cardContainer);
+  });
 
   // ポイントを使うイベント
   document.getElementById('use-point-btn').addEventListener('click', () => {
-    const usagePoint = document.getElementById('user-points-input').value;
-    const userPoint = currentUser.point;
+    const usagePoint = parseInt(document.getElementById('user-points-input').value, 10);
 
-    usePoint(userPoint, usagePoint);
+    usePoint(usagePoint, currentUser,pointDisplay);
   });
 
+  // 使用するポイントの増減イベント
+  document.querySelector('.point-control').addEventListener('click', (e) => {
+    if (!e.target.classList.contains('adjust-btn')) return;
+    const action = e.target.dataset.action;
+
+    if (action === 'plus') {
+      updateUsagePoint(action,currentUser);
+    } else if (action === 'minus') {
+      updateUsagePoint(action,currentUser);
+    }
+  });
 });

@@ -14,7 +14,7 @@
 
 ```JavaScript
 // インスタンス生成
-const html5QrCode = new Html5Qrcode('reader');
+const html5QrCode = new Html5Qrcode('QRコードを表示する要素');
 
 // Promise.ver
 // カメラを起動
@@ -33,7 +33,7 @@ html5WrCode.start(
 
 // async await.ver
 const startScan = async () => {
-  const html5QrCode = new Html5QrCode(QRコードを表示する要素);
+  const html5QrCode = new Html5QrCode('QRコードを表示する要素');
 
   // スキャン成功時の処理
   const onScanSuccess = async (decodeText)=>{

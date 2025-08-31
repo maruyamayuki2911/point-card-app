@@ -18,9 +18,9 @@
     <div class="form-group">
       <label for="use-points-input">使用ポイント数</label>
       <div class="point-control">
-        <button class="adjust-btn" data-delta="-10">-</button>
-        <input type="text" id="user-points-input" value="10" readonly>
-        <button class="adjust-btn" data-delta="10">+</button>
+        <button class="adjust-btn" data-action="minus">-</button>
+        <input type="text" id="user-points-input" value="0" readonly>
+        <button class="adjust-btn" data-action="plus">+</button>
       </div>
     </div>
 
@@ -28,10 +28,13 @@
     <button class="btn scan-btn" id="start-scan-btn">QRコードを読み取ってポイント加算</button>
   </main>
   <div class="qr-reader" id="qr-reader"></div>
+  <button id="qr-stop-btn" class="qr-stop-btn active">
+    <span></span>
+    <span></span>
+  </button>
 </body>
 <!-- QRライブラリ -->
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-
-<script src="js/main.js"></script>
+<script type="module" src="js/main.js"></script>
 
 </html>

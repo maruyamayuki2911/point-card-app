@@ -1,6 +1,7 @@
 @charset "UFT-8";
 
 body{
+  position: relative;
   font-family: 'Roboto',sans-serif;
   background-color:#f0f2f5;
   display: flex;
@@ -117,4 +118,33 @@ input[readonly]{
 .qr-reader{
   width: 100%;
   display: none;
+}
+
+.qr-stop-btn{
+  position: absolute;
+  top: 200px;
+  right: 10px;
+  display: grid;
+  grid-template-columns: repeat(1,1fr);
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  visibility: hidden;
+  background-color:transparent;
+  border: none;
+}
+
+.qr-stop-btn>span{
+  display: block;
+  width: 90%;
+  height: 2px;
+  background-color: black;
+}
+
+.qr-stop-btn>span:nth-child(1){
+  transform: translateY(10px) rotate(45deg);
+}
+
+.qr-stop-btn>span:nth-child(2){
+  transform: translateY(-10px) rotate(-45deg);
 }
