@@ -124,7 +124,7 @@ input[readonly]{
 
 .qr-stop-btn{
   position: absolute;
-  top: 80%;
+  bottom: 18%;
   left: 50%;
   width: 50%;
   transform: translateX(-50%);
